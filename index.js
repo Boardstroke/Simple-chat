@@ -13,14 +13,12 @@
     app.use(express.static( __dirname + '/public'));
   });
 
-
-
 //Quando a existir conexão
 io.on('connection', function(socket){
   // Guardar o nome do usuario
   socket.on('add user', function(username){
     socket.username = username;
-    console.log(socket.username + ' Está online');
+    io.emit('user on', socket.username);
   });
 
   //  Receber a messagem do usuario e mostrar na tela

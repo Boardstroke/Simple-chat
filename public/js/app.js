@@ -5,14 +5,21 @@ var $areaMessages = $('#messages');
 var $loginPage= $('.login');
 var $inputMessages = $('#m')
 
-$appDesktop.hide();
-//efeitos de tela
-$('.btn-sidebar').click(function(){
-  $('.inbox').css('width', '0%');
-  $('.conversas').css('width', '0%');
-  $('.chat').css('margin-left', '7%');
-  $('.chat').css('width', '93%');
 
+$appDesktop.hide();
+$('#open').hide()
+//efeitos de tela
+
+$('#close').click(function(){
+  $('.inbox').css('width', '0%'); $('.conversas').css('width', '0%');
+  $('.chat').css('margin-left', '7%'); $('.chat').css('width', '93%');
+  $('#close').hide(); $('#open').show();
+});
+$('#open').click(function(){
+  $('.inbox').css('width', '20%');
+  $('.conversas').css('width', '25%');
+  $('.chat').css('margin-left', '52%'); $('.chat').css('width', '48%')
+  $('#close').show(); $('#open').hide();
 });
 
 
@@ -24,35 +31,13 @@ var typing = false;
 
 
 
-
-//Definindo seu nome de usuario
-$('#l').submit(function() {
-  setUsername();
-  return false;
-});
-
-//Dar a hora exata
-  var getTime = function(){
-
-    var today = new Date();
-    var hour = today.getHours();
-    var minute = today.getMinutes();
-    var second = today.getSeconds();
-    var miday;
-    if(hour > 12){
-      miday = 'P.M'
-    }else {
-      miday = 'A.M'
-    }
-
-    var data = miday +' ' + hour + ':' + minute + ':' + second;
-
-    return data;
-  }
-
-
-
   var socket = io();
+
+  //Definindo seu nome de usuario
+  $('#l').submit(function() {
+    setUsername();
+    return false;
+  });
 
     $('#chat').submit(function(){
       socket.emit('new message', $('#m').val());
@@ -61,16 +46,12 @@ $('#l').submit(function() {
   });
 
 
-function sendMessage(){
-
-
-}
   function cleanInput(input){
     return $('<div/>').text(input).text()
   }
 
   function setUsername(){
-     username  = cleanInput($usernameInput.val());
+     username  = cleanInput($usernameInput.val().trim());
 
      if(username){
        $loginPage.hide();
@@ -80,6 +61,15 @@ function sendMessage(){
        socket.emit('add user', username);
      }
   };
+
+  function addUser(data){
+    var friend = data;
+
+    var list = '<h1>' + username + '</h1>'
+
+    $('#migos').append(list);
+  };
+
 
   function addMessage(data){
     var dia = getTime();
@@ -104,5 +94,29 @@ function sendMessage(){
 
   socket.on('new message', function(data){
     addMessage(data);
-    $('#name-friend') = data.username;
-});
+    });
+
+    socket.on('user on', function(data) {
+      addUser(data);
+    });
+
+
+
+
+
+
+//Dar a hora exata
+  var getTime = function(){
+    var today = new Date();
+    var hour = today.getHours();
+    var minute = today.getMinutes();
+    var second = today.getSeconds();
+    var miday;
+    if(hour > 12){
+      miday = 'P.M'
+    }else {
+      miday = 'A.M'
+    }
+    var data = miday +' ' + hour + ':' + minute + ':' + second;
+    return data;
+  }
