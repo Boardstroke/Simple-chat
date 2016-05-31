@@ -63,9 +63,8 @@ var typing = false;
   };
 
   function addUser(data){
-    var friend = data;
 
-    var list = '<h1>' + username + '</h1>'
+    var list = '<li class="clearfix">' + '  <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt=" avatar" />' + '<div class="float-right friend-list"> <h5>' + data + '</h5>   <h6>Online</h6> </div> </li>'
 
     $('#migos').append(list);
   };
@@ -96,8 +95,8 @@ var typing = false;
     addMessage(data);
     });
 
-    socket.on('user on', function(data) {
-      addUser(data);
+    socket.on('user on', function(username){
+      addUser(username);
     });
 
 
